@@ -1,0 +1,26 @@
+main: me.GravityIO.TexturePicker.Main
+name: TexturePicker
+author: GravityIO
+version: 0.1
+api-version: 1.13
+
+commands:
+  texturepicker:
+    description: The main interface for TexturePicker features.
+    aliases: [tp]
+    permission: texturepicker.main
+
+permissions:
+  texturepicker.*:
+    description: Access to all texturepicker commands
+    default: op
+    children:
+      texturepicker.main: true
+      texturepicker.loadtexture: true
+      texturepicker.unloadtexture: true
+  teturepicker.main:
+    description: Access to the /texturepicker command
+  texturepicker.loadtexture:
+    description: Access to loading textures
+  texturepicker.unloadtexture:
+    description: Access to unloading textures
