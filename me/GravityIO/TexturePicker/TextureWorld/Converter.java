@@ -3,54 +3,65 @@ package me.GravityIO.TexturePicker.TextureWorld;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.util.Vector;
 import org.yaml.snakeyaml.Yaml;
 
-import me.GravityIO.TexturePicker.Main;
-
 public class Converter {
 
-	
+	Yaml yaml = new Yaml();
+	Map<String, Object> map;
+
+	public Converter() {
+		map = yaml.load(this.getClass().getClassLoader().getResourceAsStream("test/out.yml"));
+	}
+
+	Map<String, List<Material>> convertedMats = new HashMap<String, List<Material>>();
+
 	// Check if the given name is already in the converted database
 	public boolean isConverted(String name) {
+		return convertedMats.containsKey(name);
+	}
 
-		return false;
+	// Get list of materails from converetedMats list
+	public List<Material> getConverted(String name) {
+		return convertedMats.get(name);
 	}
 
 	// Convert the image to a list of blocks and place it in a database
-	public void convertImage(File imageFile) {
+	public List<Material> convertImage(File imageFile) {
 
 		try {
 			BufferedImage image = ImageIO.read(imageFile);
 
+			List<Material> convertedMat = new ArrayList<Material>();
 			for (int y = 0; y < image.getHeight(); y++) {
 				for (int x = 0; x < image.getWidth(); x++) {
 					Vector pixelRGB = rgbToVec(image.getRGB(x, y));
-					String closestName = getBlockFromPixel(pixelRGB);
+					Material mat = getMaterialFromPixel(pixelRGB);
+					convertedMat.add(mat);
 				}
 			}
 			System.out.println("Finished loading");
+			return convertedMat;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	// Get pixel rgb and compare to list of blocks to find closest color
-	private String getBlockFromPixel(Vector pixelRGB) {
+	private Material getMaterialFromPixel(Vector pixelRGB) {
 		String closestName = null;
 		Vector closestRgb = null;
-		for () {
+		for (Map.Entry<String, Object> mapo : map.entrySet()) {
 			String thisName = mapo.getKey();
 			String rgbs = mapo.getValue().toString();
 			rgbs = rgbs.replace(",", "   ");
@@ -65,7 +76,8 @@ public class Converter {
 				closestName = thisName.toUpperCase();
 			}
 		}
-		return closestName;
+		Material mat = Material.matchMaterial(closestName);
+		return mat == null ? Material.AIR : mat;
 	}
 
 	private Vector rgbToVec(int rgb) {

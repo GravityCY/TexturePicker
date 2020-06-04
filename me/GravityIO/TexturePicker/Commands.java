@@ -54,6 +54,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 		if (cmd.getName().equalsIgnoreCase("texturepicker")) {
 			if (player.hasPermission("texturepicker.main")) {
 				if (args.length >= 1) {
+					// teleports to texture world
 					if (args[0].equalsIgnoreCase("textureworld") || args[0].equalsIgnoreCase("tw")) {
 						if (main.getServer().getWorld("TextureWorld") != null) {
 							player.teleport(main.getServer().getWorld("TextureWorld").getSpawnLocation());
@@ -63,7 +64,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 						player.sendMessage(ChatColor.RED + "No texture world...");
 						return true;
 					}
-
+					// teleports to def world
 					if (args[0].equalsIgnoreCase("normalworld") || args[0].equalsIgnoreCase("nw")) {
 						if (main.getServer().getWorld("world") != null) {
 							player.teleport(main.getServer().getWorld("world").getSpawnLocation());
@@ -73,7 +74,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 						player.sendMessage(ChatColor.RED + "Could not find default world...");
 						return true;
 					}
-
+					// deletes to texture world
 					if (args[0].equalsIgnoreCase("deletetextureworld") || args[0].equalsIgnoreCase("deltw")) {
 						if (main.getServer().getWorld("TextureWorld") != null) {
 							if (player.getWorld().equals(main.getServer().getWorld("TextureWorld"))) {
@@ -88,7 +89,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 						player.sendMessage(ChatColor.RED + "Could not find texture world...");
 						return true;
 					}
-
+					// genreates to texture world
 					if (args[0].equalsIgnoreCase("generatetextureworld") || args[0].equalsIgnoreCase("gentw")) {
 						if (main.getServer().getWorld("TextureWorld") == null) {
 							main.setup.createTextureWorld();
@@ -98,16 +99,15 @@ public class Commands implements CommandExecutor, TabCompleter {
 						player.sendMessage(ChatColor.RED + "Could not create TextureWorld...");
 						return true;
 					}
-
+					// loads texture will automatically convert it to blocks
 					if (args[0].equalsIgnoreCase("lt") || args[0].equalsIgnoreCase("loadtexture")) {
 						if (player.hasPermission("texturepicker.loadtexture")) {
 							if (main.getServer().getWorld("TextureWorld") != null) {
 								if (args.length != 1) {
-									if (new File(main.getDataFolder(), "textures/" + args[1]).exists()) {
-										File texture = new File(
-												main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
-										try {
-											BufferedImage image = ImageIO.read(texture);
+									File texture = new File(
+											main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
+									if (texture.exists()) {
+										try {BufferedImage image = ImageIO.read(texture);
 											if (image.getWidth() != 128 || image.getHeight() != 128) {
 												player.sendMessage(ChatColor.RED + "Image must be 128x128!");
 												return true;
@@ -117,7 +117,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 											e.printStackTrace();
 										}
 										if (!chunkHandler.isLoaded(args[1])) {
-											chunkHandler.loadImage(texture.getName());
+//											converter.convertImage(texture);
+											chunkHandler.loadImage(texture);
 											player.sendMessage(ChatColor.GREEN + "Loading texture...");
 											return true;
 										}
@@ -134,7 +135,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 							return true;
 						}
 					}
-
+					// unloads texture will keep the converted block configuration saved until 1h
+					// passes
 					if (args[0].equalsIgnoreCase("ut") || args[0].equalsIgnoreCase("unloadtexture")) {
 						if (player.hasPermission("texturepicker.unloadtexture")) {
 							if (main.getServer().getWorld("TextureWorld") != null) {

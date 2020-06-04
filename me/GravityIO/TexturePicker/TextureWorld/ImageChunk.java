@@ -7,13 +7,13 @@ public class ImageChunk {
 	private int currentChunk;
 	private Vector location;
 	private String imageName;
+	protected String cameFrom;
 
-	public ImageChunk(String imageName, int currentChunk, Vector location) {
-		this.imageName = ChunkHandler.formatName(imageName);
+	public ImageChunk(String imageName, int currentChunk, Vector location, String cameFrom) {
+		this.imageName = imageName;
 		this.currentChunk = currentChunk;
 		this.location = location;
-		ChunkHandler.totalImages++;
-		ChunkHandler.imageChunks.add(this);
+		this.cameFrom = cameFrom;
 	}
 
 	public String getName() {

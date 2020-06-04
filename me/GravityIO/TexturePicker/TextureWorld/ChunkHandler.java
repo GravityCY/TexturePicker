@@ -1,31 +1,47 @@
 package me.GravityIO.TexturePicker.TextureWorld;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class Helper {
+import org.bukkit.Material;
+import org.bukkit.util.Vector;
 
-}
+import me.GravityIO.TexturePicker.Main;
 
 public class ChunkHandler {
-	static public int totalImages = 0;
-	static public List<ImageChunk> imageChunks = new ArrayList<ImageChunk>();
+	static protected int totalLoadedImages = 0;
+	static protected List<ImageChunk> imageChunks = new ArrayList<ImageChunk>();
+
+	private Converter converter = new Converter();
+	private ChunkFinder chunkFinder = new ChunkFinder();
+	private ChunkPlacer chunkPlacer = new ChunkPlacer();
 
 	// Place an image in the texture world
-	public boolean loadImage(String name) {
-		name = formatName(name);
-		return false;
+	public boolean loadImage(File texture) {
+		if (converter.isConverted(texture.getName())) {
+			ImageChunk lastImageChunk = imageChunks.isEmpty() == false ? imageChunks.get(imageChunks.size() - 1) : null;
+			Vector startPos = chunkFinder.findAvailableChunk(lastImageChunk, texture);
+			List<Material> convertedMats = converter.getConverted(texture.getName());
+			chunkPlacer.placeBlocks(convertedMats, startPos);
+			return true;
+		} else {
+			ImageChunk lastImageChunk = imageChunks.isEmpty() == false ? imageChunks.get(imageChunks.size() - 1) : null;
+			Vector startPos = chunkFinder.findAvailableChunk(lastImageChunk, texture);
+			List<Material> convertedMats = converter.convertImage(texture);
+			chunkPlacer.placeBlocks(convertedMats, startPos);
+			return true;
+		}
 	}
 
 	// remove an image in the texture world
 	public boolean unloadImage(String name) {
-		name = formatName(name);
 		return false;
 	}
 
 	// Checks if an image is in the texture world
 	public boolean isLoaded(String name) {
-		name = formatName(name);
 		for (ImageChunk image : imageChunks) {
 			if (image.getName().equalsIgnoreCase(name)) {
 				return true;
@@ -48,10 +64,19 @@ public class ChunkHandler {
 		return names;
 	}
 
-	// Formats the name to replace the . with _ "texture.png" -> "texture_png"
-	public String formatName(String name) {
-		name = name.replace('.', '_');
-		return name;
+	public void createChunkDataYml() {
+		// TODO Auto-generated method stub
+		File chunkData = new File(Main.getPlugin(Main.class).getDataFolder(), "chunkData.yml");
+		if (!chunkData.exists()) {
+			try {
+				chunkData.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+
+		}
 	}
 
 }

@@ -15,12 +15,41 @@ import me.GravityIO.TexturePicker.Main;
 
 public class Setup {
 
-	Main main = Main.getPlugin(Main.class);
+	Main main;
+
+	public Setup(Main main) {
+		this.main = main;
+	}
+
 	final WorldCreator world = new WorldCreator("TextureWorld").type(WorldType.FLAT).generateStructures(false);
 
 	// Creates a texture world
 	public void createTextureWorld() {
 		setGamerules(main.getServer().createWorld(world));
+	}
+
+	// Creates the folder that contains all the textures
+	public void createTextureFolder() {
+		File textureFolder = new File(main.getDataFolder(), "textures");
+		File texture1 = new File(textureFolder, "texture1.png");
+
+		try {
+			if (!main.getDataFolder().exists()) {
+				main.getDataFolder().mkdir();
+				main.getDataFolder().createNewFile();
+			}
+			if (!textureFolder.exists()) {
+				textureFolder.mkdir();
+				textureFolder.createNewFile();
+			}
+			if (!texture1.exists()) {
+				BufferedImage img = ImageIO.read(this.getClass().getClassLoader().getResource("textures/texture1.png"));
+				ImageIO.write(img, "png", texture1);
+				texture1.createNewFile();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Sets the gamerules for the newly created world
@@ -43,30 +72,4 @@ public class Setup {
 		world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
 	}
 
-	// Creates the folder that contains all the textures
-	public boolean createTextureFolder() {
-		// TODO Auto-generated method stub
-		File textureFolder = new File(main.getDataFolder(), "textures");
-		File texture1 = new File(textureFolder, "texture1.png");
-
-		try {
-			if (!main.getDataFolder().exists()) {
-				main.getDataFolder().mkdir();
-				main.getDataFolder().createNewFile();
-			}
-			if (!textureFolder.exists()) {
-				textureFolder.mkdir();
-				textureFolder.createNewFile();
-			}
-			if (!texture1.exists()) {
-				BufferedImage img = ImageIO.read(this.getClass().getClassLoader().getResource("textures/texture1.png"));
-				ImageIO.write(img, "png", texture1);
-				texture1.createNewFile();
-			}
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
 }
