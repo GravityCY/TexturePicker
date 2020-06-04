@@ -21,7 +21,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setCommands() {
-		// Texture Picker (MAIN)
+
 		this.getCommand("texturepicker").setExecutor(new Commands(this));
 		this.getCommand("texturepicker").setTabCompleter(new Commands(this));
 	}

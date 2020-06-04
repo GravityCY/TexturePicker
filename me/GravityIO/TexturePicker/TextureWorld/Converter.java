@@ -3,6 +3,7 @@ package me.GravityIO.TexturePicker.TextureWorld;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,31 +20,6 @@ import org.yaml.snakeyaml.Yaml;
 import me.GravityIO.TexturePicker.Main;
 
 public class Converter {
-
-	File chunkDataFile = new File(Main.getPlugin(Main.class).getDataFolder(), "chunkData.yml");
-	YamlConfiguration chunkData = new YamlConfiguration();
-
-	public Converter() {
-		// TODO Auto-generated constructor stub
-		try {
-			chunkData.options().pathSeparator('#');
-			chunkData.load(chunkDataFile);
-			chunkData.options().pathSeparator('#');
-			if (!chunkDataFile.exists())
-				chunkDataFile.createNewFile();
-
-		} catch (IOException | InvalidConfigurationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-	}
-
-	public boolean isLoaded(String imageName) {
-		return chunkData.getConfigurationSection("chunks") != null
-				? chunkData.getConfigurationSection("chunks").contains(imageName)
-				: false;
-	}
 
 	public void loadImage(File imageFile) {
 
@@ -99,50 +75,13 @@ public class Converter {
 		return new Vector(red, green, blue);
 	}
 
-	private int estimateChunk(String name) throws IOException {
-		if (!chunkData.contains("chunks")) {
-			chunkData.createSection("chunks");
-			chunkData.set("totalchunks", (0));
-		}
+	
 
-		chunkData.set("chunks#" + name, chunkData.getInt("totalchunks"));
-		chunkData.set("totalchunks", (chunkData.getInt("totalchunks") + 1));
-		try {
-			chunkData.save(chunkDataFile);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return chunkData.getInt("totalchunks");
-	}
+	public boolean isLoaded(String imageName) {
 
-	private void placeInChunk(int x, int y, int currentChunk, String closest) {
-		Location loc = new Location(Bukkit.getWorld("TextureWorld"), (x - 64) + 128 * currentChunk, 3, y - 64);
-		if (Material.matchMaterial(closest) != null) {
-			loc.getBlock().setType(Material.matchMaterial(closest));
-		} else {
-			loc.getBlock().setType(Material.AIR);
-		}
-	}
-
-	public void unloadImage(File texture) {
-
-		int currentChunk = chunkData.getInt("chunks#" + texture.getName());
-		chunkData.set("chunks#" + texture.getName(), null);
-		chunkData.set("totalchunks", chunkData.getInt("totalchunks") - 1);
-		for (int x = 0; x < 128; x++) {
-			for (int y = 0; y < 128; y++) {
-				new Location(Bukkit.getWorld("TextureWorld"), (x - 64) + 128 * currentChunk, 3, y - 64).getBlock()
-						.setType(Material.GRASS_BLOCK);
-			}
-		}
-		
-		try {
-			chunkData.save(chunkDataFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Finished unloading");
+		return chunkData.getConfigurationSection("chunks") != null
+				? chunkData.getConfigurationSection("chunks").contains(imageName)
+				: false;
 	}
 
 	public Set<String> getLoaded() {
