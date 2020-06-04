@@ -9,7 +9,6 @@ public class ChunkFinder {
 	public Vector findAvailableChunk(ImageChunk imageChunk, File texture) {
 
 		if (imageChunk != null) {
-			System.out.println("imageChunk != null");
 			if (imageChunk.cameFrom == "down") {
 				Vector position = imageChunk.getVectorTopLeft().add(new Vector(0, 0, 128));
 				ChunkHandler.totalLoadedImages++;
@@ -39,7 +38,7 @@ public class ChunkFinder {
 				return position;
 			}
 		} else {
-			Vector position = new Vector(64, 3, -186);
+			Vector position = new Vector(64, 3, -64);
 			ChunkHandler.totalLoadedImages++;
 			ChunkHandler.imageChunks.add(new ImageChunk(texture.getName(), ChunkHandler.totalLoadedImages - 1, position, "down"));
 			return position;

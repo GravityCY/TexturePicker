@@ -19,12 +19,10 @@ public class ChunkPlacer {
 		ListIterator<Material> it = convertedMats.listIterator(0);
 
 		for (int x = sX; x > (sX - 128); x--) {
-			for (int y = sX; y < (sX + 128); y++) {
+			for (int y = sY; y < (sY + 128); y++) {
 				new Location(Bukkit.getWorld("TextureWorld"), x, height, y).getBlock().setType(it.next());
 			}
 		}
-		
-		System.out.println("Placed at " + sX + " " + height + " " + sY);
 	}
 
 }
