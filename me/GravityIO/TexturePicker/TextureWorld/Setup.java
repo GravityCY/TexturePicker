@@ -15,19 +15,15 @@ import me.GravityIO.TexturePicker.Main;
 
 public class Setup {
 
-	Main main;
-
+	Main main = Main.getPlugin(Main.class);
 	final WorldCreator world = new WorldCreator("TextureWorld").type(WorldType.FLAT).generateStructures(false);
 
-	public Setup(Main main) {
-		// TODO Auto-generated constructor stub
-		this.main = main;
-	}
-
+	// Creates a texture world
 	public void createTextureWorld() {
 		setGamerules(main.getServer().createWorld(world));
 	}
 
+	// Sets the gamerules for the newly created world
 	private void setGamerules(World world) {
 		world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
 		world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
@@ -47,6 +43,7 @@ public class Setup {
 		world.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
 	}
 
+	// Creates the folder that contains all the textures
 	public boolean createTextureFolder() {
 		// TODO Auto-generated method stub
 		File textureFolder = new File(main.getDataFolder(), "textures");
@@ -62,7 +59,7 @@ public class Setup {
 				textureFolder.createNewFile();
 			}
 			if (!texture1.exists()) {
-				BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource("textures/texture1.png"));
+				BufferedImage img = ImageIO.read(this.getClass().getClassLoader().getResource("textures/texture1.png"));
 				ImageIO.write(img, "png", texture1);
 				texture1.createNewFile();
 			}

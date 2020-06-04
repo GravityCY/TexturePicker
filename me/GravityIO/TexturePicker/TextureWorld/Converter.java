@@ -21,21 +21,23 @@ import me.GravityIO.TexturePicker.Main;
 
 public class Converter {
 
-	public void loadImage(File imageFile) {
+	
+	// Check if the given name is already in the converted database
+	public boolean isConverted(String name) {
 
-		Yaml yaml = new Yaml();
-		Map<String, Object> map = yaml.load(getClass().getClassLoader().getResourceAsStream("test/out.yml"));
+		return false;
+	}
+
+	// Convert the image to a list of blocks and place it in a database
+	public void convertImage(File imageFile) {
 
 		try {
 			BufferedImage image = ImageIO.read(imageFile);
-			int totalChunks = estimateChunk(imageFile.getName());
-			int currentChunk = totalChunks - 1;
 
 			for (int y = 0; y < image.getHeight(); y++) {
 				for (int x = 0; x < image.getWidth(); x++) {
 					Vector pixelRGB = rgbToVec(image.getRGB(x, y));
-					String closestName = getBlockFromPixel(map, pixelRGB);
-					placeInChunk(x, y, currentChunk, closestName);
+					String closestName = getBlockFromPixel(pixelRGB);
 				}
 			}
 			System.out.println("Finished loading");
@@ -44,11 +46,11 @@ public class Converter {
 		}
 	}
 
-	private String getBlockFromPixel(Map<String, Object> map, Vector pixelRGB) {
-		// TODO Auto-generated method stub
+	// Get pixel rgb and compare to list of blocks to find closest color
+	private String getBlockFromPixel(Vector pixelRGB) {
 		String closestName = null;
 		Vector closestRgb = null;
-		for (Map.Entry<String, Object> mapo : map.entrySet()) {
+		for () {
 			String thisName = mapo.getKey();
 			String rgbs = mapo.getValue().toString();
 			rgbs = rgbs.replace(",", "   ");
@@ -73,18 +75,5 @@ public class Converter {
 		int red = (rgb & 0xff0000) >> 16;
 
 		return new Vector(red, green, blue);
-	}
-
-	
-
-	public boolean isLoaded(String imageName) {
-
-		return chunkData.getConfigurationSection("chunks") != null
-				? chunkData.getConfigurationSection("chunks").contains(imageName)
-				: false;
-	}
-
-	public Set<String> getLoaded() {
-		return chunkData.getConfigurationSection("chunks").getKeys(false);
 	}
 }

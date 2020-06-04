@@ -18,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import me.GravityIO.TexturePicker.TextureWorld.ChunkHandler;
 import me.GravityIO.TexturePicker.TextureWorld.Converter;
 
 public class Commands implements CommandExecutor, TabCompleter {
@@ -25,6 +26,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 	Main main;
 
 	Converter converter = new Converter();
+	ChunkHandler chunkHandler = new ChunkHandler();
 
 	public Commands(Main main) {
 		this.main = main;
@@ -114,8 +116,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 											// TODO Auto-generated catch block
 											e.printStackTrace();
 										}
-										if (!converter.isLoaded(texture.getName())) {
-											converter.loadImage(texture);
+										if (!chunkHandler.isLoaded(args[1])) {
+											chunkHandler.loadImage(texture.getName());
 											player.sendMessage(ChatColor.GREEN + "Loading texture...");
 											return true;
 										}
@@ -138,13 +140,11 @@ public class Commands implements CommandExecutor, TabCompleter {
 							if (main.getServer().getWorld("TextureWorld") != null) {
 								if (args.length != 1) {
 									if (new File(main.getDataFolder(), "textures/" + args[1]).exists()) {
-										File texture = new File(main.getDataFolder(), "textures/" + args[1]);
-										if (converter.isLoaded(texture.getName())) {
-											converter.unloadImage(texture);
+										if (chunkHandler.unloadImage(args[1])) {
 											player.sendMessage(ChatColor.GREEN + "Unloading texture...");
 											return true;
 										}
-										player.sendMessage(ChatColor.RED + "Texture already unloaded!");
+										player.sendMessage(ChatColor.RED + "Error.");
 										return true;
 									}
 									player.sendMessage(ChatColor.RED + "No such file name...");
@@ -186,7 +186,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 					if (args[0].equalsIgnoreCase("loadtexture") || args[0].equalsIgnoreCase("lt")) {
 						List<String> textures = new ArrayList<String>();
 						for (String texture : Arrays.asList(new File(main.getDataFolder(), "textures").list())) {
-							if (!converter.isLoaded(texture)) {
+							if (!converter.isConverted(texture)) {
 								textures.add(texture);
 							}
 						}
@@ -194,9 +194,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 					}
 					if (args[0].equalsIgnoreCase("unloadtexture") || args[0].equalsIgnoreCase("ut")) {
 						List<String> textures = new ArrayList<String>();
-						for (String texture : converter.getLoaded()) {
-							textures.add(texture);
-						}
+						for (String name : chunkHandler.getLoadedChunkNames())
+							textures.add(name);
 						return textures;
 					}
 					return new ArrayList<String>(Arrays.asList(""));

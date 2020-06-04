@@ -9,16 +9,17 @@ public class ImageChunk {
 	private String imageName;
 
 	public ImageChunk(String imageName, int currentChunk, Vector location) {
-		this.imageName = imageName;
+		this.imageName = ChunkHandler.formatName(imageName);
 		this.currentChunk = currentChunk;
 		this.location = location;
 		ChunkHandler.totalImages++;
+		ChunkHandler.imageChunks.add(this);
 	}
 
 	public String getName() {
 		return imageName;
 	}
-	
+
 	public int getCurrentChunk() {
 		return currentChunk;
 	}
