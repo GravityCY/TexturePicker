@@ -9,7 +9,7 @@ import me.GravityIO.TexturePicker.TextureWorld.Setup;
 public class Main extends JavaPlugin {
 
 	Setup setup = new Setup(this);
-	ChunkHandler chunkHandler = new ChunkHandler();
+	ChunkHandler chunkHandler = new ChunkHandler(this);
 
 	public void onEnable() {
 		System.out.println(ChatColor.GREEN + "Enabled " + this.getName());

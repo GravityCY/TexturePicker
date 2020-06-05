@@ -11,12 +11,18 @@ import org.bukkit.util.Vector;
 import me.GravityIO.TexturePicker.Main;
 
 public class ChunkHandler {
-	static protected int totalLoadedImages = 0;
 	static protected List<ImageChunk> imageChunks = new ArrayList<ImageChunk>();
 
-	private Converter converter = new Converter();
-	private ChunkFinder chunkFinder = new ChunkFinder();
-	private ChunkPlacer chunkPlacer = new ChunkPlacer();
+	Main main;
+
+	public ChunkHandler(Main main) {
+		this.main = main;
+	}
+
+	final private Converter converter = new Converter();
+	final private ChunkFinder chunkFinder = new ChunkFinder(this);
+	final private ChunkPlacer chunkPlacer = new ChunkPlacer();
+	final private ChunkBreaker chunkBreaker = new ChunkBreaker(this);
 
 	// Place an image in the texture world
 	public boolean loadImage(File texture) {
@@ -35,8 +41,27 @@ public class ChunkHandler {
 		}
 	}
 
-	// remove an image in the texture world
-	public boolean unloadImage(String name) {
+	public void unloadImage(String name) {
+		chunkBreaker.unloadImage(name);
+	}
+
+	public Vector findGetVector(String name) {
+		for (ImageChunk c : ChunkHandler.imageChunks) {
+			if (c.getName().equalsIgnoreCase(name)) {
+				return c.getVectorTopLeft();
+			}
+		}
+		return null;
+	}
+
+	public boolean findRemove(String name) {
+		List<ImageChunk> chunks = new ArrayList<ImageChunk>(ChunkHandler.imageChunks);
+		for (ImageChunk c : chunks) {
+			if (c.getName().equalsIgnoreCase(name)) {
+				ChunkHandler.imageChunks.remove(c);
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -44,6 +69,25 @@ public class ChunkHandler {
 	public boolean isLoaded(String name) {
 		for (ImageChunk image : imageChunks) {
 			if (image.getName().equalsIgnoreCase(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean contains(String name) {
+		for (ImageChunk c : ChunkHandler.imageChunks) {
+			if (c.getName().equalsIgnoreCase(name)) {
+				System.out.println(c.getName());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean containsVector(Vector vector) {
+		for (ImageChunk c : ChunkHandler.imageChunks) {
+			if (c.getVectorTopLeft().equals(vector)) {
 				return true;
 			}
 		}
@@ -66,7 +110,7 @@ public class ChunkHandler {
 
 	public void createChunkDataYml() {
 		// TODO Auto-generated method stub
-		File chunkData = new File(Main.getPlugin(Main.class).getDataFolder(), "chunkData.yml");
+		File chunkData = new File(main.getDataFolder(), "chunkData.yml");
 		if (!chunkData.exists()) {
 			try {
 				chunkData.createNewFile();

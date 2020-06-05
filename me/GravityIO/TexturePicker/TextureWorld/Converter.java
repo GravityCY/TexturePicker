@@ -16,14 +16,14 @@ import org.yaml.snakeyaml.Yaml;
 
 public class Converter {
 
-	Yaml yaml = new Yaml();
-	Map<String, Object> map;
+	private Yaml yaml = new Yaml();
+	private Map<String, Object> map;
 
 	public Converter() {
 		map = yaml.load(this.getClass().getClassLoader().getResourceAsStream("test/out.yml"));
 	}
 
-	Map<String, List<Material>> convertedMats = new HashMap<String, List<Material>>();
+	private Map<String, List<Material>> convertedMats = new HashMap<String, List<Material>>();
 
 	// Check if the given name is already in the converted database
 	public boolean isConverted(String name) {

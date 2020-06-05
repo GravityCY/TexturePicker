@@ -7,7 +7,7 @@ public class ImageChunk {
 	private int currentChunk;
 	private Vector location;
 	private String imageName;
-	public String cameFrom;
+	protected String cameFrom;
 
 	public ImageChunk(String imageName, int currentChunk, Vector location, String cameFrom) {
 		this.imageName = imageName;

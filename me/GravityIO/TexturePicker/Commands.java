@@ -25,8 +25,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 
 	Main main;
 
-	Converter converter = new Converter();
-	ChunkHandler chunkHandler = new ChunkHandler();
+	final Converter converter = new Converter();
+	final ChunkHandler chunkHandler = new ChunkHandler(main);
 
 	public Commands(Main main) {
 		this.main = main;
@@ -107,7 +107,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 									File texture = new File(
 											main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
 									if (texture.exists()) {
-										try {BufferedImage image = ImageIO.read(texture);
+										try {
+											BufferedImage image = ImageIO.read(texture);
 											if (image.getWidth() != 128 || image.getHeight() != 128) {
 												player.sendMessage(ChatColor.RED + "Image must be 128x128!");
 												return true;
@@ -135,18 +136,14 @@ public class Commands implements CommandExecutor, TabCompleter {
 							return true;
 						}
 					}
-					// unloads texture will keep the converted block configuration saved until 1h
-					// passes
+					// unloads texture
 					if (args[0].equalsIgnoreCase("ut") || args[0].equalsIgnoreCase("unloadtexture")) {
 						if (player.hasPermission("texturepicker.unloadtexture")) {
 							if (main.getServer().getWorld("TextureWorld") != null) {
 								if (args.length != 1) {
-									if (new File(main.getDataFolder(), "textures/" + args[1]).exists()) {
-										if (chunkHandler.unloadImage(args[1])) {
-											player.sendMessage(ChatColor.GREEN + "Unloading texture...");
-											return true;
-										}
-										player.sendMessage(ChatColor.RED + "Error.");
+									if (chunkHandler.contains(args[1])) {
+										chunkHandler.unloadImage(args[1]);
+										player.sendMessage(ChatColor.GREEN + "Unloading texture...");
 										return true;
 									}
 									player.sendMessage(ChatColor.RED + "No such file name...");

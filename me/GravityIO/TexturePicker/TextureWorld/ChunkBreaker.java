@@ -1,15 +1,28 @@
 package me.GravityIO.TexturePicker.TextureWorld;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.util.Vector;
+
 public class ChunkBreaker {
-	
-//	static public void unloadImage(String name) {
-//		ChunkHandler.totalImages--;
-//		for (int x = 0; x < 128; x++) {
-//			for (int y = 0; y < 128; y++) {
-//				new Location(Bukkit.getWorld("TextureWorld"), (x - 64) + 128 * currentChunk, 3, y - 64).getBlock()
-//						.setType(Material.GRASS_BLOCK);
-//			}
-//		}
-//		System.out.println("Finished unloading");
-//	}
+
+	ChunkHandler chunkHandler;
+
+	public ChunkBreaker(ChunkHandler chunkHandler) {
+		this.chunkHandler = chunkHandler;
+	}
+
+	public void unloadImage(String name) {
+		Vector position = chunkHandler.findGetVector(name);
+		int sX = position.getBlockX();
+		int sY = position.getBlockZ();
+
+		for (int x = sX; x > (sX - 128); x--) {
+			for (int y = sY; y < (sY + 128); y++) {
+				new Location(Bukkit.getWorld("TextureWorld"), x, 3, y).getBlock().setType(Material.GRASS_BLOCK);
+			}
+		}
+		chunkHandler.findRemove(name);
+	}
 }
