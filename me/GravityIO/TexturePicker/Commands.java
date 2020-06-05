@@ -19,15 +19,11 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
 import me.GravityIO.TexturePicker.Maps.Renderer;
-import me.GravityIO.TexturePicker.TextureWorld.ChunkHandler;
-import me.GravityIO.TexturePicker.TextureWorld.Converter;
 
 public class Commands implements CommandExecutor, TabCompleter {
 
 	Main main;
 
-	final Converter converter = new Converter();
-	final ChunkHandler chunkHandler = new ChunkHandler(main);
 
 	public Commands(Main main) {
 		this.main = main;
@@ -92,8 +88,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 		return false;
 	}
 
-	String[] commandsLong = { "textureworld", "normalworld", "deletetextureworld", "generatetextureworld",
-			"loadtexture", "unloadtexture", "reload" };
+	String[] commandsLong = { "getmap", "gm" };
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
@@ -106,19 +101,9 @@ public class Commands implements CommandExecutor, TabCompleter {
 				if (args.length == 1) {
 					return Arrays.asList(commandsLong);
 				} else if (args.length == 2) {
-					if (args[0].equalsIgnoreCase("loadtexture") || args[0].equalsIgnoreCase("lt")) {
-						List<String> textures = new ArrayList<String>();
-						for (String texture : Arrays.asList(new File(main.getDataFolder(), "textures").list())) {
-							if (!converter.isConverted(texture)) {
-								textures.add(texture);
-							}
-						}
-						return textures;
-					}
-					if (args[0].equalsIgnoreCase("unloadtexture") || args[0].equalsIgnoreCase("ut")) {
-						List<String> textures = new ArrayList<String>();
-						for (String name : chunkHandler.getLoadedChunkNames())
-							textures.add(name);
+					if (args[0].equalsIgnoreCase("getmap") || args[0].equalsIgnoreCase("gm")) {
+						List<String> textures = Arrays
+								.asList(new File(main.getDataFolder().getAbsolutePath() + "/textures/").list());
 						return textures;
 					}
 					return new ArrayList<String>(Arrays.asList(""));
