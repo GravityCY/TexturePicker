@@ -15,10 +15,12 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import me.GravityIO.TexturePicker.Maps.Map;
+import me.GravityIO.TexturePicker.Maps.MapHandler;
 
 public class Commands implements CommandExecutor, TabCompleter {
 
 	Main main;
+	MapHandler mapsHandler = new MapHandler();
 
 	public Commands(Main main) {
 		this.main = main;
@@ -45,24 +47,70 @@ public class Commands implements CommandExecutor, TabCompleter {
 		Player player = (Player) sender;
 		if (cmd.getName().equalsIgnoreCase("texturepicker")) {
 			if (player.hasPermission("texturepicker.main")) {
-				if (args[0].equalsIgnoreCase("getmap") || args[0].equalsIgnoreCase("gm")) {
-					if (player.hasPermission("texturepicker.getmap")) {
+
+				if (args[0].equalsIgnoreCase("createmap") || args[0].equalsIgnoreCase("cmap")) {
+					if (player.hasPermission("texturepicker.createmap")) {
 						if (args.length != 1) {
 							if (new File(main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]).exists()) {
 								File texture = new File(
 										main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
-								Map map = new Map(texture);
-								player.getInventory().addItem(map);
-								player.sendMessage(ChatColor.GREEN + "Added map");
+								if (!mapsHandler.isLoaded(texture.getName())) {
+									mapsHandler.createMap(texture);
+									player.sendMessage(ChatColor.GREEN + "Created " + texture.getName() + ".");
+									return true;
+								}
+								player.sendMessage(ChatColor.RED + "Map is already loaded...");
 								return true;
 							}
-							player.sendMessage(ChatColor.RED + "No such file name...");
+							player.sendMessage(ChatColor.RED + "File " + args[1] + " was not found...");
 							return true;
 						}
-						player.sendMessage(ChatColor.RED + "Please enter the file name of which to load!");
+						player.sendMessage(ChatColor.RED + "This command requires an argument...");
 						return true;
 					}
 					player.sendMessage(ChatColor.RED + "You do not have the approriate perms for this command...");
+					return true;
+				}
+
+				if (args[0].equalsIgnoreCase("getmap") || args[0].equalsIgnoreCase("gmap")) {
+					if (player.hasPermission("texturepicker.getmap")) {
+						if (args.length != 1) {
+							String texture = args[1];
+
+							Map map = null;
+							if (mapsHandler.isLoaded(texture)) {
+								map = mapsHandler.getMap(texture);
+								player.getInventory().addItem(map);
+								player.sendMessage(ChatColor.GREEN + "Gave " + texture + ".");
+								return true;
+							}
+							player.sendMessage(ChatColor.RED + texture + " is not loaded...");
+							return true;
+						}
+						player.sendMessage(ChatColor.RED + "This command requires an argument...");
+						return true;
+					}
+					player.sendMessage(ChatColor.RED + "Please enter the file name of which to load!");
+					return true;
+				}
+
+				if (args[0].equalsIgnoreCase("removemap") || args[0].equalsIgnoreCase("rmap")) {
+					if (player.hasPermission("texturepicker.removemap")) {
+						if (args.length != 1) {
+							String texture = args[1];
+
+							if (mapsHandler.isLoaded(texture)) {
+								mapsHandler.removeMap(texture);
+								player.sendMessage(ChatColor.GREEN + "Removed " + texture + ".");
+								return true;
+							}
+							player.sendMessage(ChatColor.RED + texture + " is not loaded...");
+							return true;
+						}
+						player.sendMessage(ChatColor.RED + "This command requires an argument...");
+						return true;
+					}
+					player.sendMessage(ChatColor.RED + "Please enter the file name of which to load!");
 					return true;
 				}
 				player.sendMessage(ChatColor.RED + "Unknown command...");
@@ -74,7 +122,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 		return false;
 	}
 
-	String[] commandsLong = { "getmap", "gm" };
+	String[] commandsLong = { "getmap", "gmap", "createmap", "cmap", "removemap", "rmap" };
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
@@ -87,9 +135,21 @@ public class Commands implements CommandExecutor, TabCompleter {
 				if (args.length == 1) {
 					return Arrays.asList(commandsLong);
 				} else if (args.length == 2) {
-					if (args[0].equalsIgnoreCase("getmap") || args[0].equalsIgnoreCase("gm")) {
-						List<String> textures = Arrays
-								.asList(new File(main.getDataFolder().getAbsolutePath() + "/textures/").list());
+					if (args[0].equalsIgnoreCase("createmap") || args[0].equalsIgnoreCase("cmap")) {
+						List<String> textures = new ArrayList<String>();
+						List<String> loadedTextures = mapsHandler.getLoadedMapNames();
+						for (String fileName : Arrays
+								.asList(new File(main.getDataFolder().getAbsolutePath() + "/textures/").list())) {
+							if (!loadedTextures.contains(fileName)) {
+								textures.add(fileName);
+							}
+						}
+						return textures;
+					}
+
+					if (args[0].equalsIgnoreCase("getmap") || args[0].equalsIgnoreCase("gmap")
+							|| args[0].equalsIgnoreCase("removemap") || args[0].equalsIgnoreCase("rmap")) {
+						List<String> textures = mapsHandler.getLoadedMapNames();
 						return textures;
 					}
 					return new ArrayList<String>(Arrays.asList(""));

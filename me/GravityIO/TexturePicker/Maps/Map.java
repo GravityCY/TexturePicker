@@ -3,29 +3,49 @@ package me.GravityIO.TexturePicker.Maps;
 import java.io.File;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.map.MapView;
 
 public class Map extends ItemStack {
 
+	private String fileName;
+	private int mapId;
+
 	public Map(File texture) {
-		super(Material.FILLED_MAP);
-		Renderer renderer = new Renderer();
+		super(Material.PAPER);
+
+		String textureName = texture.getName();
+		ItemMeta thisIMeta = getItemMeta();
+		thisIMeta.setDisplayName(textureName);
+		setItemMeta(thisIMeta);
+		setFileName(textureName);
+		setActualMap(texture);
+	}
+
+	private void setActualMap(File texture) {
+		MyMapRenderer renderer = new MyMapRenderer();
 		renderer.setTexture(texture);
-
-		String textureName = Character.toUpperCase(texture.getName().charAt(0)) + texture.getName().substring(1);
-		String textureNameFormat = textureName.substring(0, textureName.indexOf('.'));
-
 		MapView mapView = Bukkit.createMap(Bukkit.getWorld("world"));
 		mapView.getRenderers().clear();
 		mapView.addRenderer(renderer);
+		setMapId(mapView.getId());
+	}
 
-		MapMeta mapMeta = (MapMeta) getItemMeta();
-		mapMeta.setMapView(mapView);
-		mapMeta.setDisplayName(ChatColor.GREEN + textureNameFormat);
-		setItemMeta(mapMeta);
+	private void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	private void setMapId(int mapId) {
+		this.mapId = mapId;
+	}
+
+	public int getMapId() {
+		return mapId;
 	}
 }

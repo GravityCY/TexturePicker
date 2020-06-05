@@ -16,14 +16,14 @@ permissions:
     default: op
     children:
       texturepicker.main: true
-      texturepicker.loadtexture: true
-      texturepicker.unloadtexture: true
+      texturepicker.createmap: true
       texturepicker.getmap: true
+      texturepicker.removemap: true
   teturepicker.main:
     description: Access to the /texturepicker command
-  texturepicker.loadtexture:
-    description: Access to loading textures
-  texturepicker.unloadtexture:
-    description: Access to unloading textures
+  texturepicker.createmap:
+    description: Access to creating maps
   texturepicker.getmap:
     description: Access to getting map images
+  texturepicker.removemap:
+    deccription: Access to unload / remove loaded maps
