@@ -18,9 +18,12 @@ permissions:
       texturepicker.main: true
       texturepicker.loadtexture: true
       texturepicker.unloadtexture: true
+      texturepicker.getmap: true
   teturepicker.main:
     description: Access to the /texturepicker command
   texturepicker.loadtexture:
     description: Access to loading textures
   texturepicker.unloadtexture:
     description: Access to unloading textures
+  texturepicker.getmap:
+    description: Access to getting map images

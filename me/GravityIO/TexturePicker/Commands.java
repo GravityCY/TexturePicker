@@ -12,12 +12,17 @@ import javax.imageio.ImageIO;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
 
+import me.GravityIO.TexturePicker.Maps.Renderer;
 import me.GravityIO.TexturePicker.TextureWorld.ChunkHandler;
 import me.GravityIO.TexturePicker.TextureWorld.Converter;
 
@@ -155,6 +160,42 @@ public class Commands implements CommandExecutor, TabCompleter {
 							player.sendMessage(ChatColor.RED + "Could not find texture world...");
 							return true;
 						}
+						player.sendMessage(ChatColor.RED + "You do not have the approriate perms for this command...");
+						return true;
+					}
+
+					if (args[0].equalsIgnoreCase("getmap") || args[0].equalsIgnoreCase("gm")) {
+						if (player.hasPermission("texturepicker.getmap")) {
+							if (main.getServer().getWorld("TextureWorld") != null) {
+								if (args.length != 1) {
+									if (new File(main.getDataFolder().getAbsolutePath() + "/textures/" + args[1])
+											.exists()) {
+										Renderer renderer = new Renderer();
+										renderer.setTexture(new File(main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]));
+										ItemStack map = new ItemStack(Material.FILLED_MAP);
+										MapView mapView = Bukkit.createMap(Bukkit.getWorld("world"));
+										mapView.getRenderers().clear();
+										mapView.addRenderer(renderer);
+
+										MapMeta mapMeta = ((MapMeta) map.getItemMeta());
+										mapMeta.setMapView(mapView);
+
+										map.setItemMeta(mapMeta);
+
+										player.getInventory().addItem(map);
+										return true;
+									}
+									player.sendMessage(ChatColor.RED + "No such file name...");
+									return true;
+								}
+								player.sendMessage(ChatColor.RED + "Please enter the file name of which to load!");
+								return true;
+							}
+							player.sendMessage(ChatColor.RED + "Could not find texture world...");
+							return true;
+						}
+						player.sendMessage(ChatColor.RED + "You do not have the approriate perms for this command...");
+						return true;
 					}
 					player.sendMessage(ChatColor.RED + "Unknown command...");
 					return true;

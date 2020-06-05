@@ -24,7 +24,7 @@ public class ChunkFinder {
 				} else {
 					Vector position = imageChunk.getVectorTopLeft().clone().add(new Vector(-128, 0, 0));
 					ChunkHandler.imageChunks.add(
-							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size() - 1), position, "down"));
+							new ImageChunk(texture.getName(), ChunkHandler.imageChunks.size(), position, "down"));
 					return position;
 				}
 			}
@@ -37,7 +37,7 @@ public class ChunkFinder {
 				} else {
 					Vector position = imageChunk.getVectorTopLeft().clone().add(new Vector(0, 0, 128));
 					ChunkHandler.imageChunks.add(
-							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size() - 1), position, "right"));
+							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size()), position, "right"));
 					return position;
 				}
 			}
@@ -45,12 +45,12 @@ public class ChunkFinder {
 				if (!chunkHandler.containsVector(imageChunk.getVectorTopLeft().clone().add(new Vector(0, 0, -128)))) {
 					Vector position = imageChunk.getVectorTopLeft().clone().add(new Vector(0, 0, -128));
 					ChunkHandler.imageChunks.add(
-							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size() - 1), position, "left"));
+							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size()), position, "left"));
 					return position;
 				} else {
 					Vector position = imageChunk.getVectorTopLeft().clone().add(new Vector(128, 0, 0));
 					ChunkHandler.imageChunks.add(
-							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size() - 1), position, "up"));
+							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size()), position, "up"));
 					return position;
 				}
 			}
@@ -58,19 +58,19 @@ public class ChunkFinder {
 				if (!chunkHandler.containsVector(imageChunk.getVectorTopLeft().clone().add(new Vector(-128, 0, 0)))) {
 					Vector position = imageChunk.getVectorTopLeft().clone().add(new Vector(-128, 0, 0));
 					ChunkHandler.imageChunks.add(
-							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size() - 1), position, "down"));
+							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size()), position, "down"));
 					return position;
 				} else {
 					Vector position = imageChunk.getVectorTopLeft().clone().add(new Vector(0, 0, -128));
 					ChunkHandler.imageChunks.add(
-							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size() - 1), position, "left"));
+							new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size()), position, "left"));
 					return position;
 				}
 			}
 		} else {
 			Vector position = new Vector(64, 3, -64);
 			ChunkHandler.imageChunks
-					.add(new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size() - 1), position, "down"));
+					.add(new ImageChunk(texture.getName(), (ChunkHandler.imageChunks.size()), position, "down"));
 
 			return position;
 		}
