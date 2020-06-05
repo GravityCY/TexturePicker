@@ -8,22 +8,17 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.MapMeta;
-import org.bukkit.map.MapView;
 
-import me.GravityIO.TexturePicker.Maps.Renderer;
+import me.GravityIO.TexturePicker.Maps.Map;
 
 public class Commands implements CommandExecutor, TabCompleter {
 
 	Main main;
-
 
 	public Commands(Main main) {
 		this.main = main;
@@ -54,20 +49,11 @@ public class Commands implements CommandExecutor, TabCompleter {
 					if (player.hasPermission("texturepicker.getmap")) {
 						if (args.length != 1) {
 							if (new File(main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]).exists()) {
-								Renderer renderer = new Renderer();
-								renderer.setTexture(
-										new File(main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]));
-								ItemStack map = new ItemStack(Material.FILLED_MAP);
-								MapView mapView = Bukkit.createMap(Bukkit.getWorld("world"));
-								mapView.getRenderers().clear();
-								mapView.addRenderer(renderer);
-
-								MapMeta mapMeta = ((MapMeta) map.getItemMeta());
-								mapMeta.setMapView(mapView);
-
-								map.setItemMeta(mapMeta);
-
+								File texture = new File(
+										main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
+								Map map = new Map(texture);
 								player.getInventory().addItem(map);
+								player.sendMessage(ChatColor.GREEN + "Added map");
 								return true;
 							}
 							player.sendMessage(ChatColor.RED + "No such file name...");
