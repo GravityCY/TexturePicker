@@ -54,7 +54,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 							if (new File(main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]).exists()) {
 								File texture = new File(
 										main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
-								if (!mapsHandler.isLoaded(texture.getName())) {
+								if (!mapsHandler.contains(texture.getName())) {
 									mapsHandler.createMap(texture);
 									player.sendMessage(ChatColor.GREEN + "Created " + texture.getName() + ".");
 									return true;
@@ -78,7 +78,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 							String texture = args[1];
 
 							Map map = null;
-							if (mapsHandler.isLoaded(texture)) {
+							if (mapsHandler.contains(texture)) {
 								map = mapsHandler.getMap(texture);
 								player.getInventory().addItem(map);
 								player.sendMessage(ChatColor.GREEN + "Gave " + texture + ".");
@@ -99,7 +99,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 						if (args.length != 1) {
 							String texture = args[1];
 
-							if (mapsHandler.isLoaded(texture)) {
+							if (mapsHandler.contains(texture)) {
 								mapsHandler.removeMap(texture);
 								player.sendMessage(ChatColor.GREEN + "Removed " + texture + ".");
 								return true;

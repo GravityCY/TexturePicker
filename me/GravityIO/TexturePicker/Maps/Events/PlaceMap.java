@@ -1,5 +1,6 @@
 package me.GravityIO.TexturePicker.Maps.Events;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,28 +31,38 @@ public class PlaceMap implements Listener {
 	private void onMapPlace(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block clickedBlock = event.getClickedBlock();
+
 			if (event.getHand() == EquipmentSlot.HAND) {
 				if (event.getPlayer().getInventory().getItemInMainHand() != null) {
-					ItemStack itemInHand = event.getPlayer().getInventory().getItemInMainHand();
-					if (mapsHandler.isLoaded(itemInHand.getItemMeta().getDisplayName())) {
-						event.setCancelled(true);
+					if (event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR) {
+						ItemStack itemInHand = event.getPlayer().getInventory().getItemInMainHand();
 
-						ItemStack mapHolder = itemInHand;
-						Location blockLoc = clickedBlock.getRelative(event.getBlockFace()).getLocation();
-						new BukkitRunnable() {
+						if (mapsHandler.contains(itemInHand.getItemMeta().getDisplayName())) {
+							event.setCancelled(true);
 
-							@Override
-							public void run() {
-								ItemFrame itemFrame = (ItemFrame) blockLoc.getWorld().spawn(blockLoc, ItemFrame.class);
-								itemFrame.setFacingDirection(event.getBlockFace());
-								ItemStack map = new ItemStack(Material.FILLED_MAP);
-								MapMeta mapMeta = (MapMeta) map.getItemMeta();
-								mapMeta.setMapId(mapsHandler.findGetMapId(mapHolder.getItemMeta().getDisplayName()));
-								map.setItemMeta(mapMeta);
+							ItemStack mapHolder = itemInHand;
+							Location blockLoc = clickedBlock.getRelative(event.getBlockFace()).getLocation();
+							new BukkitRunnable() {
 
-								itemFrame.setItem(map);
-							}
-						}.runTaskLater(main, 1);
+								@Override
+								public void run() {
+									ItemFrame itemFrame = (ItemFrame) blockLoc.getWorld().spawn(blockLoc,
+											ItemFrame.class);
+									itemFrame.setFacingDirection(event.getBlockFace());
+									ItemStack map = new ItemStack(Material.FILLED_MAP);
+									MapMeta mapMeta = (MapMeta) map.getItemMeta();
+									mapMeta.setMapId(
+											mapsHandler.findGetMapId(mapHolder.getItemMeta().getDisplayName()));
+									map.setItemMeta(mapMeta);
+									itemFrame.setItem(map);
+
+									if (event.getPlayer().getGameMode() == GameMode.SURVIVAL)
+										itemInHand.setAmount(itemInHand.getAmount() - 1);
+									event.getPlayer().updateInventory();
+
+								}
+							}.runTaskLater(main, 1);
+						}
 					}
 				}
 			}

@@ -3,6 +3,7 @@ package me.GravityIO.TexturePicker.Maps;
 import java.io.File;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,7 +19,7 @@ public class Map extends ItemStack {
 
 		String textureName = texture.getName();
 		ItemMeta thisIMeta = getItemMeta();
-		thisIMeta.setDisplayName(textureName);
+		thisIMeta.setDisplayName(ChatColor.GREEN + textureName);
 		setItemMeta(thisIMeta);
 		setFileName(textureName);
 		setActualMap(texture);

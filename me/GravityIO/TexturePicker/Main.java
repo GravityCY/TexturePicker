@@ -3,14 +3,20 @@ package me.GravityIO.TexturePicker;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.GravityIO.TexturePicker.Maps.Events.BreakMap;
 import me.GravityIO.TexturePicker.Maps.Events.PlaceMap;
 
 public class Main extends JavaPlugin {
 
 	public void onEnable() {
 		System.out.println(ChatColor.GREEN + "Enabled " + this.getName());
-		this.getServer().getPluginManager().registerEvents(new PlaceMap(this), this);
+		setListeners();
 		setCommands();
+	}
+
+	private void setListeners() {
+		this.getServer().getPluginManager().registerEvents(new PlaceMap(this), this);
+		this.getServer().getPluginManager().registerEvents(new BreakMap(), this);
 	}
 
 	private void setCommands() {
