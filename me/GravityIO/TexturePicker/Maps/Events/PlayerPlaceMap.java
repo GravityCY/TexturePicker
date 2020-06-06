@@ -17,12 +17,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.GravityIO.TexturePicker.Main;
 import me.GravityIO.TexturePicker.Maps.MapHandler;
 
-public class PlaceMap implements Listener {
+public class PlayerPlaceMap implements Listener {
 
 	MapHandler mapsHandler = new MapHandler();
 	Main main;
 
-	public PlaceMap(Main main) {
+	public PlayerPlaceMap(Main main) {
 		this.main = main;
 	}
 
@@ -46,19 +46,22 @@ public class PlaceMap implements Listener {
 
 								@Override
 								public void run() {
-									ItemFrame itemFrame = (ItemFrame) blockLoc.getWorld().spawn(blockLoc,
-											ItemFrame.class);
-									itemFrame.setFacingDirection(event.getBlockFace());
-									ItemStack map = new ItemStack(Material.FILLED_MAP);
-									MapMeta mapMeta = (MapMeta) map.getItemMeta();
-									mapMeta.setMapId(
-											mapsHandler.findGetMapId(mapHolder.getItemMeta().getDisplayName()));
-									map.setItemMeta(mapMeta);
-									itemFrame.setItem(map);
+									try {
+										ItemFrame itemFrame = (ItemFrame) blockLoc.getWorld().spawn(blockLoc,
+												ItemFrame.class);
+										itemFrame.setFacingDirection(event.getBlockFace());
+										ItemStack map = new ItemStack(Material.FILLED_MAP);
+										MapMeta mapMeta = (MapMeta) map.getItemMeta();
+										mapMeta.setMapId(
+												mapsHandler.findGetMapId(mapHolder.getItemMeta().getDisplayName()));
+										map.setItemMeta(mapMeta);
+										itemFrame.setItem(map);
 
-									if (event.getPlayer().getGameMode() == GameMode.SURVIVAL)
-										itemInHand.setAmount(itemInHand.getAmount() - 1);
-									event.getPlayer().updateInventory();
+										if (event.getPlayer().getGameMode() == GameMode.SURVIVAL)
+											itemInHand.setAmount(itemInHand.getAmount() - 1);
+										event.getPlayer().updateInventory();
+									} catch (IllegalArgumentException e) {
+									}
 
 								}
 							}.runTaskLater(main, 1);
@@ -68,4 +71,5 @@ public class PlaceMap implements Listener {
 			}
 		}
 	}
+	
 }

@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.MapMeta;
 
 import me.GravityIO.TexturePicker.Maps.MapHandler;
 
-public class BreakMap implements Listener {
+public class PlayerBreakMap implements Listener {
 
 	MapHandler mapsHandler = new MapHandler();
 

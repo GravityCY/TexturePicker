@@ -3,8 +3,10 @@ package me.GravityIO.TexturePicker;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.GravityIO.TexturePicker.Maps.Events.BreakMap;
-import me.GravityIO.TexturePicker.Maps.Events.PlaceMap;
+import me.GravityIO.TexturePicker.Maps.Events.PhysHangingBreak;
+import me.GravityIO.TexturePicker.Maps.Events.PlayerBreakMap;
+import me.GravityIO.TexturePicker.Maps.Events.PlayerCreativeInteract;
+import me.GravityIO.TexturePicker.Maps.Events.PlayerPlaceMap;
 
 public class Main extends JavaPlugin {
 
@@ -15,8 +17,10 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setListeners() {
-		this.getServer().getPluginManager().registerEvents(new PlaceMap(this), this);
-		this.getServer().getPluginManager().registerEvents(new BreakMap(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerPlaceMap(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerBreakMap(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerCreativeInteract(), this);
+		this.getServer().getPluginManager().registerEvents(new PhysHangingBreak(), this);
 	}
 
 	private void setCommands() {
