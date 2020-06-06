@@ -19,7 +19,6 @@ import me.GravityIO.TexturePicker.Maps.MapHandler;
 
 public class PlayerPlaceMap implements Listener {
 
-	MapHandler mapsHandler = new MapHandler();
 	Main main;
 
 	public PlayerPlaceMap(Main main) {
@@ -37,10 +36,9 @@ public class PlayerPlaceMap implements Listener {
 					if (event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR) {
 						ItemStack itemInHand = event.getPlayer().getInventory().getItemInMainHand();
 
-						if (mapsHandler.contains(itemInHand.getItemMeta().getDisplayName())) {
+						if (MapHandler.contains(itemInHand.getItemMeta().getDisplayName())) {
 							event.setCancelled(true);
 
-							ItemStack mapHolder = itemInHand;
 							Location blockLoc = clickedBlock.getRelative(event.getBlockFace()).getLocation();
 							new BukkitRunnable() {
 
@@ -53,7 +51,7 @@ public class PlayerPlaceMap implements Listener {
 										ItemStack map = new ItemStack(Material.FILLED_MAP);
 										MapMeta mapMeta = (MapMeta) map.getItemMeta();
 										mapMeta.setMapId(
-												mapsHandler.findGetMapId(mapHolder.getItemMeta().getDisplayName()));
+												MapHandler.findGetMapId(itemInHand.getItemMeta().getDisplayName()));
 										map.setItemMeta(mapMeta);
 										itemFrame.setItem(map);
 
@@ -71,5 +69,5 @@ public class PlayerPlaceMap implements Listener {
 			}
 		}
 	}
-	
+
 }

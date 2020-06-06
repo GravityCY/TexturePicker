@@ -54,8 +54,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 							if (new File(main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]).exists()) {
 								File texture = new File(
 										main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
-								if (!mapsHandler.contains(texture.getName())) {
-									mapsHandler.createMap(texture);
+								if (!MapHandler.contains(texture.getName())) {
+									MapHandler.createMap(texture);
 									player.sendMessage(ChatColor.GREEN + "Created " + texture.getName() + ".");
 									return true;
 								}
@@ -78,8 +78,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 							String texture = args[1];
 
 							Map map = null;
-							if (mapsHandler.contains(texture)) {
-								map = mapsHandler.getMap(texture);
+							if (MapHandler.contains(texture)) {
+								map = MapHandler.getMap(texture);
 								player.getInventory().addItem(map);
 								player.sendMessage(ChatColor.GREEN + "Gave " + texture + ".");
 								return true;
@@ -99,8 +99,8 @@ public class Commands implements CommandExecutor, TabCompleter {
 						if (args.length != 1) {
 							String texture = args[1];
 
-							if (mapsHandler.contains(texture)) {
-								mapsHandler.removeMap(texture);
+							if (MapHandler.contains(texture)) {
+								MapHandler.removeMap(texture);
 								player.sendMessage(ChatColor.GREEN + "Removed " + texture + ".");
 								return true;
 							}
@@ -137,7 +137,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 				} else if (args.length == 2) {
 					if (args[0].equalsIgnoreCase("createmap") || args[0].equalsIgnoreCase("cmap")) {
 						List<String> textures = new ArrayList<String>();
-						List<String> loadedTextures = mapsHandler.getLoadedMapNames();
+						List<String> loadedTextures = MapHandler.getLoadedMapNames();
 						for (String fileName : Arrays
 								.asList(new File(main.getDataFolder().getAbsolutePath() + "/textures/").list())) {
 							if (!loadedTextures.contains(fileName)) {
@@ -149,7 +149,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 
 					if (args[0].equalsIgnoreCase("getmap") || args[0].equalsIgnoreCase("gmap")
 							|| args[0].equalsIgnoreCase("removemap") || args[0].equalsIgnoreCase("rmap")) {
-						List<String> textures = mapsHandler.getLoadedMapNames();
+						List<String> textures = MapHandler.getLoadedMapNames();
 						return textures;
 					}
 					return new ArrayList<String>(Arrays.asList(""));

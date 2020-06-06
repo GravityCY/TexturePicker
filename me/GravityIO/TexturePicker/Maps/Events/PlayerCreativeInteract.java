@@ -31,9 +31,9 @@ public class PlayerCreativeInteract implements Listener {
 
 						if (result.getHitEntity() != null) {
 							MapMeta map = (MapMeta) ((ItemFrame) result.getHitEntity()).getItem().getItemMeta();
-							if (mapHandler.containsId(map.getMapId())) {
+							if (MapHandler.containsId(map.getMapId())) {
 								event.setCancelled(true);
-								Map mapHolder = mapHandler.getMap(map.getMapId());
+								Map mapHolder = MapHandler.getMap(map.getMapId());
 								if (!player.getInventory().contains(mapHolder)) {
 									if (player.getInventory().firstEmpty() <= 8) {
 										player.getInventory().addItem(mapHolder);

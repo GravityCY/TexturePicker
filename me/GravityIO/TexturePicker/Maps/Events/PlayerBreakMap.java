@@ -22,15 +22,13 @@ public class PlayerBreakMap implements Listener {
 	public void onBreakMap(EntityDamageByEntityEvent event) {
 		if (event.getEntity() instanceof ItemFrame) {
 			ItemFrame itemFrame = (ItemFrame) event.getEntity();
-
 			if (itemFrame.getItem().getType() == Material.FILLED_MAP) {
-
 				MapMeta map = (MapMeta) itemFrame.getItem().getItemMeta();
-				if (mapsHandler.containsId(map.getMapId())) {
+				if (MapHandler.containsId(map.getMapId())) {
 					if (event.getDamager() instanceof Player) {
 						Player player = (Player) event.getDamager();
 						if (player.getGameMode() == GameMode.SURVIVAL) {
-							itemFrame.getWorld().dropItem(itemFrame.getLocation(), mapsHandler.getMap(map.getMapId()));
+							itemFrame.getWorld().dropItem(itemFrame.getLocation(), MapHandler.getMap(map.getMapId()));
 						}
 						itemFrame.remove();
 					}

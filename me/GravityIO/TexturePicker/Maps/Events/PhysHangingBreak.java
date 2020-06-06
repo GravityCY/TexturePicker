@@ -13,8 +13,6 @@ import me.GravityIO.TexturePicker.Maps.MapHandler;
 
 public class PhysHangingBreak implements Listener {
 
-	MapHandler mapHandler = new MapHandler();
-
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	private void itemFrameBreak(HangingBreakEvent event) {
@@ -23,9 +21,9 @@ public class PhysHangingBreak implements Listener {
 				ItemFrame itemFrame = (ItemFrame) event.getEntity();
 				if (itemFrame.getItem().getType() == Material.FILLED_MAP) {
 					MapMeta mapMeta = (MapMeta) itemFrame.getItem().getItemMeta();
-					if (mapHandler.containsId(mapMeta.getMapId())) {
+					if (MapHandler.containsId(mapMeta.getMapId())) {
 						event.setCancelled(true);
-						itemFrame.getWorld().dropItem(itemFrame.getLocation(), mapHandler.getMap(mapMeta.getMapId()));
+						itemFrame.getWorld().dropItem(itemFrame.getLocation(), MapHandler.getMap(mapMeta.getMapId()));
 						itemFrame.remove();
 					}
 				}

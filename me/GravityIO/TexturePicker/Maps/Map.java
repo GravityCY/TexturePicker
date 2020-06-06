@@ -22,16 +22,28 @@ public class Map extends ItemStack {
 		thisIMeta.setDisplayName(ChatColor.GREEN + textureName);
 		setItemMeta(thisIMeta);
 		setFileName(textureName);
-		setActualMap(texture);
-	}
-
-	private void setActualMap(File texture) {
 		MyMapRenderer renderer = new MyMapRenderer();
 		renderer.setTexture(texture);
 		MapView mapView = Bukkit.createMap(Bukkit.getWorld("world"));
 		mapView.getRenderers().clear();
 		mapView.addRenderer(renderer);
 		setMapId(mapView.getId());
+	}
+
+	@SuppressWarnings("deprecation")
+	public Map(File texture, int mapId) {
+		super(Material.PAPER);
+
+		ItemMeta thisIMeta = getItemMeta();
+		thisIMeta.setDisplayName(ChatColor.GREEN + texture.getName());
+		setItemMeta(thisIMeta);
+		setFileName(texture.getName());
+		setMapId(mapId);
+		MyMapRenderer renderer = new MyMapRenderer();
+		renderer.setTexture(texture);
+		MapView mapView = Bukkit.getMap(mapId);
+		mapView.getRenderers().clear();
+		mapView.addRenderer(renderer);
 	}
 
 	private void setFileName(String fileName) {

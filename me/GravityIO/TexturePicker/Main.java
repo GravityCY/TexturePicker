@@ -5,6 +5,7 @@ import java.io.File;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.GravityIO.TexturePicker.Maps.Map;
 import me.GravityIO.TexturePicker.Maps.MapHandler;
 import me.GravityIO.TexturePicker.Maps.Events.PhysHangingBreak;
 import me.GravityIO.TexturePicker.Maps.Events.PlayerBreakMap;
@@ -13,7 +14,7 @@ import me.GravityIO.TexturePicker.Maps.Events.PlayerPlaceMap;
 
 public class Main extends JavaPlugin {
 
-
+	@Override
 	public void onEnable() {
 		System.out.println(ChatColor.GREEN + "Enabled " + this.getName());
 		setListeners();
@@ -21,19 +22,9 @@ public class Main extends JavaPlugin {
 		loadAllImages();
 	}
 
-	private void loadAllImages() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				File textureFolder = new File(getDataFolder().getAbsolutePath() + "/textures/");
-				MapHandler mapHandler = new MapHandler();
-				for (File texture : textureFolder.listFiles()) {
-					mapHandler.createMap(texture);
-				}
-			}
-		}).start();
-
+	@Override
+	public void onDisable() {
+		saveListToFile();
 	}
 
 	private void setListeners() {
@@ -48,8 +39,37 @@ public class Main extends JavaPlugin {
 		this.getCommand("texturepicker").setTabCompleter(new Commands(this));
 	}
 
-	public void onDisable() {
-		System.out.println("BYE BYE FROM TEXTUREPICKER <3");
+	private void saveListToFile() {
+		for (Map map : MapHandler.getLoadedMaps()) {
+			this.getConfig().set(map.getFileName().replace('.', '_'), map.getMapId());
+		}
+		this.saveConfig();
+	}
+
+	private void loadAllImages() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				File textureFolder = new File(getDataFolder().getAbsolutePath() + "/textures/");
+				for (File texture : textureFolder.listFiles()) {
+					// If this is a new texture that wasnt in file before
+					if (!getConfig().contains(texture.getName().replace('.', '_'))) {
+						MapHandler.createMap(texture);
+						System.out.println("Creating new map...");
+						// Else if this a previous texture in file
+					} else {
+						int prevMapId = getConfig().getInt(texture.getName().replace('.', '_'));
+						// If the mapViews renderers does not contain mine meaning this was a restart
+						// Need to Bukkit.getMapId(num).addrenderer(myRenderer);
+						System.out.println("Using pre-existing map id with my renderer...");
+						MapHandler.loadMapId(texture, prevMapId);
+					}
+
+				}
+			}
+		}).start();
+
 	}
 
 }
