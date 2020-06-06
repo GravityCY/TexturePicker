@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.inventory.meta.MapMeta;
 
 import me.GravityIO.TexturePicker.Maps.MapHandler;
@@ -35,6 +37,11 @@ public class PlayerBreakMap implements Listener {
 				}
 			}
 		}
+	}
+
+	@EventHandler
+	public void onBreakMapFrame(HangingBreakByEntityEvent event) {
+		new EntityDamageByEntityEvent(event.getRemover(), event.getEntity(), DamageCause.ENTITY_ATTACK, 0);
 	}
 
 }
