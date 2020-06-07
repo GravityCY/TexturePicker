@@ -9,14 +9,14 @@ import org.bukkit.ChatColor;
 public class MapHandler {
 	static private List<Map> loadedMaps = new ArrayList<Map>();
 
-	static public Map createMap(File texture) {
-		Map map = new Map(texture);
+	static public Map createMap(File texture, String fileTree) {
+		Map map = new Map(texture, fileTree);
 		loadedMaps.add(map);
 		return map;
 	}
 
-	static public Map loadMapId(File texture, int mapId) {
-		Map map = new Map(texture, mapId);
+	static public Map loadMapId(File texture, int mapId, String fileTree) {
+		Map map = new Map(texture, mapId, fileTree);
 		loadedMaps.add(map);
 		return map;
 	}

@@ -12,9 +12,11 @@ import org.bukkit.map.MapView;
 public class Map extends ItemStack {
 
 	private String fileName;
+	@SuppressWarnings("unused")
+	private String fileTree;
 	private int mapId;
 
-	public Map(File texture) {
+	public Map(File texture, String fileTree) {
 		super(Material.PAPER);
 
 		String textureName = texture.getName();
@@ -28,10 +30,11 @@ public class Map extends ItemStack {
 		mapView.getRenderers().clear();
 		mapView.addRenderer(renderer);
 		setMapId(mapView.getId());
+		setFileTree(fileTree);
 	}
 
 	@SuppressWarnings("deprecation")
-	public Map(File texture, int mapId) {
+	public Map(File texture, int mapId, String fileTree) {
 		super(Material.PAPER);
 
 		ItemMeta thisIMeta = getItemMeta();
@@ -44,18 +47,23 @@ public class Map extends ItemStack {
 		MapView mapView = Bukkit.getMap(mapId);
 		mapView.getRenderers().clear();
 		mapView.addRenderer(renderer);
+		setFileTree(fileTree);
+	}
+
+	private void setFileTree(String fileTree) {
+		this.fileTree = fileTree;
 	}
 
 	private void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
 
-	public String getFileName() {
-		return fileName;
-	}
-
 	private void setMapId(int mapId) {
 		this.mapId = mapId;
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 
 	public int getMapId() {

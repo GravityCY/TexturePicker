@@ -55,7 +55,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 								File texture = new File(
 										main.getDataFolder().getAbsolutePath() + "/textures/" + args[1]);
 								if (!MapHandler.contains(texture.getName())) {
-									MapHandler.createMap(texture);
+									MapHandler.createMap(texture, Main.getPathFromTextureFolder(texture));
 									player.sendMessage(ChatColor.GREEN + "Created " + texture.getName() + ".");
 									return true;
 								}

@@ -4,18 +4,17 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.GravityIO.TexturePicker.Main;
 import me.GravityIO.TexturePicker.Maps.MapHandler;
+import me.GravityIO.TexturePicker.Maps.MapHolderToMap;
 
 public class PlayerPlaceMap implements Listener {
 
@@ -25,7 +24,6 @@ public class PlayerPlaceMap implements Listener {
 		this.main = main;
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	private void onMapPlace(PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -45,16 +43,8 @@ public class PlayerPlaceMap implements Listener {
 								@Override
 								public void run() {
 									try {
-										ItemFrame itemFrame = (ItemFrame) blockLoc.getWorld().spawn(blockLoc,
-												ItemFrame.class);
-										itemFrame.setFacingDirection(event.getBlockFace());
-										ItemStack map = new ItemStack(Material.FILLED_MAP);
-										MapMeta mapMeta = (MapMeta) map.getItemMeta();
-										mapMeta.setMapId(
-												MapHandler.findGetMapId(itemInHand.getItemMeta().getDisplayName()));
-										map.setItemMeta(mapMeta);
-										itemFrame.setItem(map);
-
+										MapHolderToMap.placeMap(blockLoc, event.getBlockFace(),
+												itemInHand.getItemMeta().getDisplayName());
 										if (event.getPlayer().getGameMode() == GameMode.SURVIVAL)
 											itemInHand.setAmount(itemInHand.getAmount() - 1);
 										event.getPlayer().updateInventory();
