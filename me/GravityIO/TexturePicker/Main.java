@@ -16,8 +16,6 @@ import me.GravityIO.TexturePicker.Maps.Events.PlayerPlaceMap;
 
 public class Main extends JavaPlugin {
 
-	final File textureFolder = new File(getDataFolder().getAbsoluteFile() + "/textures/");
-
 	@Override
 	public void onEnable() {
 		System.out.println(ChatColor.GREEN + "Enabled " + this.getName());
@@ -55,14 +53,13 @@ public class Main extends JavaPlugin {
 
 			@Override
 			public void run() {
+				File textureFolder = new File(getDataFolder().getAbsolutePath() + "/textures/");
 				List<File> textures = getTextureFiles(textureFolder);
 
 				for (File texture : textures) {
-					String path = getPathFromTextureFolder(texture);
-					System.out.println(path);
 					// If this is a new texture that wasnt in file before
 					if (!getConfig().contains(texture.getName().replace('.', '_'))) {
-						MapHandler.createMap(texture, path);
+						MapHandler.createMap(texture);
 						System.out.println("Creating new map... " + texture.getName());
 						// Else if this a previous texture in file
 					} else {
@@ -70,7 +67,7 @@ public class Main extends JavaPlugin {
 						// If the mapViews renderers does not contain mine meaning this was a restart
 						// Need to Bukkit.getMapId(num).addrenderer(myRenderer);
 						System.out.println("Using pre-existing map id with my renderer... " + texture.getName());
-						MapHandler.loadMapId(texture, prevMapId, path);
+						MapHandler.loadMapId(texture, prevMapId);
 					}
 				}
 			}
@@ -78,14 +75,7 @@ public class Main extends JavaPlugin {
 
 	}
 
-	static public String getPathFromTextureFolder(File texture) {
-		int index = texture.getAbsolutePath().indexOf("TexturePicker\\textures") + 23;
-		int lastIndex = texture.getAbsolutePath().length() - texture.getName().length() - 1;
-
-		return texture.getAbsolutePath().substring(index, lastIndex);
-	}
-
-	static public List<File> getTextureFiles(File textureFolder) {
+	private List<File> getTextureFiles(File textureFolder) {
 		List<File> textureFiles = new ArrayList<File>();
 		for (File texture : textureFolder.listFiles()) {
 			if (!texture.isDirectory()) {
